@@ -1,3 +1,2 @@
 
-for _ in range(int(input())):
-    print("ajda")
+#include<bits/stdc++.h>

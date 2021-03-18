@@ -1,5 +1,3 @@
 
-
-for _ in range(int(input())):
-    print("Hello World",end=" ")
-
+for i in range(int(input())):
+    print("Square is :",i*i)

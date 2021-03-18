@@ -33,21 +33,36 @@ app.post("/",function(req,res){
     }
     
     var input = String(req.body.input);
-
+    var error = false;
     fs.writeFileSync('input.txt', input, function (err) {
         if (err) console.log(err);
         //console.log('Saved!');
     });
     if(req.body.language=="Python"){
-        cp.execSync("python test.py < input.txt > output.txt")
+        try{
+            cp.execSync("python test.py < input.txt > output.txt")
+        }
+        catch(e){
+            error=true;
+        }
+        
     }
     else{
-        cp.execSync("g++ test.cpp");
-        cp.execSync("./a.out < input.txt > output.txt");
+        try{
+            cp.execSync("g++ test.cpp");
+            cp.execSync("./a.out < input.txt > output.txt");
+        }
+        catch(e){
+            error=true;
+            //console.log("Some error occured")
+        }
+        
     }
     
-
-    result = String(fs.readFileSync("output.txt"));
+    if(error===true)
+        result="There's some problem in your code."
+    else
+        result = String(fs.readFileSync("output.txt"));
     res.render("home",{input:input,code:code,result:result});
       
 })

@@ -1,4 +1,4 @@
-var editor = ace.edit('editor');
+    var editor = ace.edit('editor');
         editor.session.setMode("ace/mode/c_cpp");
         editor.setTheme("ace/theme/monokai");
 
