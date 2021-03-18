@@ -46,6 +46,7 @@
         <div class="row">
             <div class="col-lg-8">
                 <form action="/" method="POST">
+                    
                     <div class="col-lg-12">
                         <input type="hidden" name="code" style="display: none;">
 <pre id="editor">
@@ -59,7 +60,9 @@
                         <textarea name="input" id="input" class="form-control" style="min-height:100%;"><% if (input) {%><%= input %><%}%></textarea>
                     </div>
                     <div class="col-lg-12">
-                        <button type="submit" class="btn btn-primary" onclick="test();">Run</button>
+                      <label class="radio-inline"><input type="radio" value="C++" name="language" checked>C++</label>
+                      <label class="radio-inline"><input type="radio" value="Python" name="language">Python</label>
+                      <button type="submit" class="btn btn-primary">Run</button>
                     </div>
                 </form>
                 

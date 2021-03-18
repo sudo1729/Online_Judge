@@ -1,10 +1,3 @@
-#include<bits/stdc++.h>
-using namespace std;
 
-int main(){
-    
-    int n;cin>>n;
-    for(int i=0;i<n;i++){
-        cout<<i*i*i<<"\n";
-    }
-}
+for _ in range(int(input())):
+    print("ajda")

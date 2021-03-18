@@ -17,21 +17,35 @@ app.get("/",function(req,res){
 })
 
 app.post("/",function(req,res){
-    console.log(req.body);
+    //console.log(req.body);
     var code = req.body.code;
-    fs.writeFileSync('test.cpp',code,function(err){
-        if(err)
-            console.log(err);
-    })
+    if(req.body.language=="Python"){
+        fs.writeFileSync('test.py',code,function(err){
+            if(err)
+                console.log(err);
+        })
+    }
+    else{
+        fs.writeFileSync('test.cpp',code,function(err){
+            if(err)
+                console.log(err);
+        })
+    }
+    
     var input = String(req.body.input);
 
     fs.writeFileSync('input.txt', input, function (err) {
         if (err) console.log(err);
         //console.log('Saved!');
     });
-
-    cp.execSync("g++ test.cpp");
-    cp.execSync("./a.out < input.txt > output.txt");
+    if(req.body.language=="Python"){
+        cp.execSync("python test.py < input.txt > output.txt")
+    }
+    else{
+        cp.execSync("g++ test.cpp");
+        cp.execSync("./a.out < input.txt > output.txt");
+    }
+    
 
     result = String(fs.readFileSync("output.txt"));
     res.render("home",{input:input,code:code,result:result});
