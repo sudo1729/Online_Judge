@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Personal Judge</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Ubuntu&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+    <!-- Navbar -->
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">ANOJ</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Docs</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+
+
+    <!-- Code-Area -->
+
+
+
+    
+
+    <div class="container-wrap">
+        <div class="row">
+            <div class="col-lg-8">
+                <form action="/" method="POST">
+                    <div class="col-lg-12">
+                        <input type="hidden" name="code" style="display: none;">
+<pre id="editor">
+<% if (code) {%>
+<%=code %>
+<%}%>
+</pre>
+  
+                    </div>
+                    <div class="col-lg-12">
+                        <textarea name="input" id="input" class="form-control" style="min-height:100%;"><% if (input) {%><%= input %><%}%></textarea>
+                    </div>
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-primary" onclick="test();">Run</button>
+                    </div>
+                </form>
+                
+            </div>
+            <div class="col-lg-4">
+                <textarea name="result" id="result" class="form-control" style="min-height:100%;"><% if (result) {%><%= result %><%}%></textarea>
+            </div>
+        </div>
+        
+        
+    </div>
+
+
+
+    <script src="js/src/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <script src="js/script.js"></script>
+</body>
+</html>
