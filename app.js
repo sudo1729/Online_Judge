@@ -7,6 +7,7 @@ const ejs = require("ejs");
 const { log } = require("console");
 const cp = require("child_process");
 const fs = require("fs");
+const stripFinalNewline = require('strip-final-newline');
 
 const app=express();
 
@@ -25,12 +26,17 @@ app.get("/",function(req,res){
 
 
 //POST Request here
-
+var expectedOriginal=""
 
 app.post("/",function(req,res){
-    console.log(req.body);
+    //console.log(req.body);
     var code = req.body.code;
-    var expected = req.body.expected
+    expectedOriginal = req.body.expected
+    var expected = req.body.expected.split(/\r?\n/);
+    // fs.writeFileSync('expected.txt',expected,function(err){
+    //     if(err)
+    //         console.log(err);
+    // })
     if(req.body.language=="Python"){
         fs.writeFileSync('test.py',code,function(err){
             if(err)
@@ -52,7 +58,7 @@ app.post("/",function(req,res){
     });
     if(req.body.language=="Python"){
         try{
-            cp.execSync("python test.py < input.txt > output.txt")
+            cp.execSync("python test.py<input.txt>output.txt")
         }
         catch(e){
             error=String(e.stderr);
@@ -65,7 +71,7 @@ app.post("/",function(req,res){
                 console.log("The error is "+err);
                 console.log("The error is "+stderr);
             });
-            cp.execSync("./a.out < input.txt > output.txt");
+            cp.execSync("./a.out<input.txt>output.txt");
         }
         catch(e){
             error=String(e.stderr);
@@ -75,23 +81,29 @@ app.post("/",function(req,res){
         
     }
     
-    var verdict = null;
+    let verdict = null;
+    let recieved = ""
     if(error!==null){
         recieved=error
         verdict="RE"
     }
     
     else{
-        recieved = String(fs.readFileSync("output.txt"));
-        if(recieved==expected){
+        recievedOriginal = stripFinalNewline(fs.readFileSync("output.txt")).toString('utf8');
+        recieved = stripFinalNewline(fs.readFileSync("output.txt")).toString('utf8').split(/\r?\n/);
+        // expected = stripFinalNewline(fs.readFileSync("expected.txt")).toString('utf8');
+        //console.log(recieved);
+        //console.log(expected);
+        if(JSON.stringify(recieved)===JSON.stringify(expected)){
             verdict="AC"
         }
         else{
             verdict="WA"
         }
-    }
         
-    res.render("home",{input:input,code:code,recieved:recieved,expected:expected,verdict:verdict});
+    }
+    
+    res.render("home",{input:input,code:code,recieved:recievedOriginal,expected:expectedOriginal,verdict:verdict});
       
 })
 

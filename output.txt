@@ -1,0 +1,2 @@
+square is : 100
+cub is : 1000
