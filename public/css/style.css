@@ -1,15 +1,57 @@
 
-/* body{
-    overflow: hidden;
-} */
+body{
+    font-family: 'Montserrat', sans-serif;
+}
+.top-container{
+    height: 3rem;
+}
 
-.right{
-    float: right;
+
+.editor-container{
+    width:100%;
+    height: 30rem;
+    display:inline-block;
+    position:relative;
+}
+.expected-container{
+    height: 18.7rem;
+}
+.expected-container-new{
+    background-color: black;
+}
+.stdin-container{
+    height: 7rem;
+}
+.stdin-text{
+    padding: 4% 1%;
+    background-color: teal;
+}
+.expected-output-text{
+    background-color: teal;
+    padding: 2%;
+    text-align: center;
+    border-radius: 5px;
 }
 
 #editor {
-    position: relative;
-    width: 100%;
-    height: 500px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     font-size: 18px;
+}
+textarea{
+    overflow-y: scroll;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+}
+
+.language-text{
+    padding: 1% 4%;
+}
+
+.verdict-text{
+    padding: 2%;
 }

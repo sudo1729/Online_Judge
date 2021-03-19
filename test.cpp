@@ -1,2 +1,3 @@
 
-#include<bits/stdc++.h>
+n=int(input())
+print(n*n)
