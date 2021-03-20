@@ -15,3 +15,8 @@ Basic Node web app to achieve functionality of online judges.
   3. Users also have the option to provide expected section so that they can check the verdict of their output
     namely- "WA"=> Wrong Answer, "AC"=> code compiled successfully and returned deisred output, "RE"=> Runtime Error
     (The error will be generated in recieved output section(). 
+
+### Sample working->
+
+
+![final](https://user-images.githubusercontent.com/28992930/111881533-cd947f80-89d6-11eb-992f-0b7ef9c609e1.gif)
