@@ -1,28 +1,38 @@
 var editor = ace.edit('editor');
-let arr=[]
-if($('input[value="C++"]:checked').val())
-    console.log("C++");
-if($('input[value="Python"]:checked').val())
-    console.log("Python");
-var selected=String($('input[name="language"]:checked').val());
-arr.push(selected)
+editor.setTheme("ace/theme/tomorrow");
+var cpp = $("#cpp");
+var python = $("#python")
+var language = $('input[name="language"]');
+editor.getSession().setMode("ace/mode/c_cpp");
+
+var snippetCnt = 0
+
+cpp.click(function(){
+    editor.getSession().setMode("ace/mode/c_cpp");
+    language.val("cpp")
+    if(snippetCnt===0){
+        var snippet = "#include<bits/stdc++.h>\nusing namespace std;\n\nint main(){\n\nreturn 0;\n}";
+        var snippetManager = ace.require("ace/snippets").snippetManager;
+        snippetManager.insertSnippet(editor, snippet);
+        snippetCnt++;
+    }
+    
+    cpp.css("background-color","green");
+    python.css("background-color","rgb(53, 53, 206)");
+})
+python.click(function(){
+    editor.getSession().setMode("ace/mode/python");
+    language.val("Python")
+    python.css("background-color","green");
+    cpp.css("background-color","rgb(53, 53, 206)");
+})
 
 
-console.log(arr);
-// if(selected=="Python"){
-//     editor.getSession().setMode("ace/mode/python");
-// }
-// else{
-//     editor.getSession().setMode("ace/mode/c_cpp");
-// }
-
-ace.require("ace/ext/language_tools");
 editor.setOptions({
     enableBasicAutocompletion: true,
-    enableSnippets: true
+    enableSnippets: true,
+    enableLiveAutocompletion: true
 });
-
-editor.setTheme("ace/theme/monokai");
 
 
 var input = $('input[name="code"]');
@@ -30,3 +40,4 @@ var input = $('input[name="code"]');
 editor.getSession().on("change", function () {
     input.val(editor.getSession().getValue());
 });
+

@@ -29,10 +29,10 @@ app.get("/",function(req,res){
 var expectedOriginal=""
 
 app.post("/",function(req,res){
-    //console.log(req.body);
+    console.log(req.body);
     var code = req.body.code;
-    expectedOriginal = req.body.expected
-    var expected = req.body.expected.split(/\r?\n/);
+    expectedOriginal = stripFinalNewline(req.body.expected);
+    var expected = stripFinalNewline(req.body.expected).split(/\r?\n/);
     // fs.writeFileSync('expected.txt',expected,function(err){
     //     if(err)
     //         console.log(err);
@@ -82,9 +82,9 @@ app.post("/",function(req,res){
     }
     
     let verdict = null;
-    let recieved = ""
+    let recievedOriginal = ""
     if(error!==null){
-        recieved=error
+        recievedOriginal=error
         verdict="RE"
     }
     

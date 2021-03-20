@@ -43,8 +43,9 @@
                             <span>Language</span>
                         </div>
                         <div class="col-lg-10 ml-auto language-text">
-                            <label class="radio-inline"><input type="radio" value="C++" name="language" checked>C++</label>
-                            <label class="radio-inline"><input type="radio" value="Python" name="language">Python</label>
+                            <input type="hidden" name="language" style="display: none;">
+                            <label class="radio-inline"><input type="button" value="C++" id="cpp" class="btn btn-primary"></label>
+                            <label class="radio-inline"><input type="button" value="Python" id="python" class="btn btn-primary"></label>
                         </div>
                     </div>
                     
@@ -104,7 +105,7 @@
                             <span>Recieved Output</span>
                         </div>
                         <div class="col-lg-12 expected-container">
-                            <textarea name="recieved" class="form-control" style="min-height: 79.5%;min-width: 100%;"><% if (recieved) {%><%= recieved %><%}%></textarea>
+                            <textarea name="recieved" class="form-control" style="min-height: 79.5%;min-width: 100%;" readonly><% if (recieved) {%><%= recieved %><%}%></textarea>
                         </div>
                     </div>
                 </div>
@@ -119,7 +120,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
+    <script src="js/src/ext-language_tools.js"></script>
     <script src="js/script.js"></script>
 </body>
 </html>

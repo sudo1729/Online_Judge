@@ -1,6 +1,2 @@
-
-n=int(input())
-print("square is :",n*n)
-print("cub is :",n*n*n)
-
-
+for i in range(int(input())):
+    print("Hello Wordl")
