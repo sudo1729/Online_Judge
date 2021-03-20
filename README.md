@@ -2,8 +2,8 @@
 Basic Node web app to achieve functionality of online judges.
 
 ## How to use?->
-  1 clone the repository into your local machine
-  2 cd into project folder , run command 'node app.js'.
+  1. clone the repository into your local machine
+  2. cd into project folder , run command 'node app.js'.
   
  ## Requirements->
   1. You need to have node installed (see node docs for installation instruction),
