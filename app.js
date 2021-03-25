@@ -9,8 +9,10 @@ const cp = require("child_process");
 const fs = require("fs");
 const stripFinalNewline = require('strip-final-newline');
 
+//App
 const app=express();
 
+//Setting App
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
@@ -19,47 +21,23 @@ app.use(express.static("public"));
 
 //GET Request
 
-
 app.get("/",function(req,res){
     res.render("home",{input:null,code:null,recieved:null,verdict:null,expected:null});
-})
+});
 
 
 //POST Request here
-var expectedOriginal=""
 
-app.post("/",function(req,res){
-    console.log(req.body);
-    var code = req.body.code;
-    expectedOriginal = stripFinalNewline(req.body.expected);
-    var expected = stripFinalNewline(req.body.expected).split(/\r?\n/);
-    // fs.writeFileSync('expected.txt',expected,function(err){
-    //     if(err)
-    //         console.log(err);
-    // })
-    if(req.body.language=="Python"){
-        fs.writeFileSync('test.py',code,function(err){
-            if(err)
-                console.log(err);
-        })
-    }
-    else{
-        fs.writeFileSync('test.cpp',code,function(err){
-            if(err)
-                console.log(err);
-        })
-    }
-    
-    var input = String(req.body.input);
-    var error = null;
-    var verdict="Runtime Error";
-    fs.writeFileSync('input.txt', input, function (err) {
-        if (err) console.log(err);
-        //console.log('Saved!');
-    });
-    if(req.body.language=="Python"){
+var recieved = null, expected = null, input = null, verdict = null, code = null, language = null, error = null;
+
+
+function runCommand(){
+    var cmd = null;
+    if(language=="Python"){
+        //cmd = "python code.py<input.txt>recieved.txt";
+        cmd = "python "+__dirname+"/code/python/code.py"+"<"+__dirname+"/io/input.txt"+">"+__dirname+"/io/recieved.txt";
         try{
-            cp.execSync("python test.py<input.txt>output.txt",{timeout:5000});
+            cp.execSync(cmd,{timeout:5000});
         }
         catch(e){
             error=String(e.stderr);
@@ -68,15 +46,17 @@ app.post("/",function(req,res){
                 verdict="TLE"
             }
         }
-        
     }
     else{
+        cmd = "cd "+__dirname+"/code/cpp/ && g++ code.cpp";
         try{
-            cp.execSync("g++ test.cpp" ,{timeout:5000},function(err,stderr){
+            cp.execSync(cmd ,{timeout:5000},function(err,stderr){
                 console.log("The error is "+err);
                 console.log("The error is "+stderr);
             });
-            cp.execSync("./a.out<input.txt>output.txt",);
+
+            cmd = "cd "+__dirname+"/code/cpp/ && "+"./a.out"+"<"+__dirname+"/io/input.txt"+">"+__dirname+"/io/recieved.txt";
+            cp.execSync(cmd);
         }
         catch(e){
             error=String(e.stderr);
@@ -85,29 +65,85 @@ app.post("/",function(req,res){
                 verdict="TLE"
             }
         }
-        
     }
-    let recievedOriginal = ""
-    if(error!==null){
-        recievedOriginal=error;
-    }
+    var path = __dirname+"/io/recieved.txt";
+    if(error!==null)
+        recieved = error;
+    else
+        recieved = stripFinalNewline(fs.readFileSync(path)).toString('utf8');
     
+};
+
+function getExpected(val){
+    expected = stripFinalNewline(val).toString('utf8');
+    //console.log(expected);
+    var path = __dirname+"/io/expected.txt";
+    fs.writeFileSync(path,expected,function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+};
+
+function getInput(val){
+    input = val;
+    //console.log(input);
+    var path = __dirname+"/io/input.txt";
+    fs.writeFileSync(path,input,function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+};
+
+function getCode(val){
+    code = val;
+    var path = __dirname+"/code/";
+    if(language=="Python"){
+        path+="python/code.py";    
+    }
     else{
-        recievedOriginal = stripFinalNewline(fs.readFileSync("output.txt")).toString('utf8');
-        recieved = stripFinalNewline(fs.readFileSync("output.txt")).toString('utf8').split(/\r?\n/);
-        // expected = stripFinalNewline(fs.readFileSync("expected.txt")).toString('utf8');
-        //console.log(recieved);
-        //console.log(expected);
-        if(JSON.stringify(recieved)===JSON.stringify(expected)){
-            verdict="AC"
-        }
-        else{
-            verdict="WA"
-        }
-        
+        path+="cpp/code.cpp";
     }
+    fs.writeFileSync(path,code,function(err){
+        if(err)
+            console.log(err);
+    });
+};
+
+function getEvaluation(){
+    if(JSON.stringify(stripFinalNewline(expected).toString('utf8').split(/\r?\n/))===JSON.stringify(stripFinalNewline(recieved).toString('utf8').split(/\r?\n/))){
+        verdict="AC";
+    }
+    else{
+        verdict="WA";
+    }
+}
+
+
+
+
+app.post("/",function(req,res){
+    language = req.body.language;
+    //input
+    getInput(req.body.input);
+
+    //Expected
+    getExpected(req.body.expected);
+
+    //Code
+    getCode(req.body.code);
+
+    //Run
+    runCommand();
+
+    //Eval
+    if(error === null)
+        getEvaluation();
+    else
+        verdict = "RE";
     
-    res.render("home",{input:input,code:code,recieved:recievedOriginal,expected:expectedOriginal,verdict:verdict});
+    res.render("home",{input:input,code:code,recieved:recieved,expected:expected,verdict:verdict});
       
 })
 
