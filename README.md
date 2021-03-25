@@ -4,7 +4,7 @@ Basic Node web app to achieve functionality of online judges.
 ## How to use?->
   ##### 1. clone the repository into your local machine
 
-  # Important ->
+  ## Important ->
   #### 2. Create 2 folders namely 'code' and 'io' (without quotes). 
   #### 3. inside code create 2 folders 'cpp' and 'python'.
   #### 4. create 3 files inside io folder 'expected.txt' , 'recieved.txt' & 'input.txt'
