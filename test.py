@@ -1,2 +1,6 @@
+
 for i in range(int(input())):
-    print("Hello Wordl")
+    print(i
+
+
+

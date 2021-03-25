@@ -1,2 +1,7 @@
 Testing
 user-code
+input.txt
+output.txt
+expected.txt
+recieved.txt
+node_modules

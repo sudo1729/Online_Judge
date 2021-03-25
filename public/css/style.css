@@ -1,58 +1,31 @@
 
-body{
-    font-family: 'Montserrat', sans-serif;
-}
-.top-container{
-    height: 3rem;
-}
-
-
 .editor-container{
-    margin-top: 2%;
     width:100%;
-    height: 30rem;
-    display:inline-block;
+    height: 100%;
+    /* display:inline-block; */
     position:relative;
+    min-height: 30rem;
 }
-.expected-container{
-    height: 18.7rem;
-}
-.expected-container-new{
-    background-color: black;
-}
-.stdin-container{
-    height: 7rem;
-}
-.stdin-text{
-    padding: 4% 1%;
-    background-color: teal;
-}
-.expected-output-text{
-    background-color: teal;
-    padding: 2%;
-    text-align: center;
-    border-radius: 5px;
-}
-
 #editor {
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-    font-size: 18px;
+    font-size: 17px;
+    overflow: hidden;
 }
 textarea{
     overflow-y: scroll;
-    box-sizing: border-box;
-    width: 100%;
-    height: 100%;
+    resize: none;
 }
 
-.language-text{
-    padding: 1% 4%;
+.stdin>.stdin-prep {
+    flex: 100% 100% 10%;
+}
+.exp>.exp-prep{
+    flex: 100%;
 }
 
-.verdict-text{
-    padding: 2%;
-}
+
+

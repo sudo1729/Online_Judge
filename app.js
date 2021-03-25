@@ -52,40 +52,44 @@ app.post("/",function(req,res){
     
     var input = String(req.body.input);
     var error = null;
+    var verdict="Runtime Error";
     fs.writeFileSync('input.txt', input, function (err) {
         if (err) console.log(err);
         //console.log('Saved!');
     });
     if(req.body.language=="Python"){
         try{
-            cp.execSync("python test.py<input.txt>output.txt")
+            cp.execSync("python test.py<input.txt>output.txt",{timeout:5000});
         }
         catch(e){
             error=String(e.stderr);
+            //console.log("Error has occurered it is:"+error);
+            if(e.signal=="SIGTERM"){
+                verdict="TLE"
+            }
         }
         
     }
     else{
         try{
-            cp.execSync("g++ test.cpp" ,function(err,stderr){
+            cp.execSync("g++ test.cpp" ,{timeout:5000},function(err,stderr){
                 console.log("The error is "+err);
                 console.log("The error is "+stderr);
             });
-            cp.execSync("./a.out<input.txt>output.txt");
+            cp.execSync("./a.out<input.txt>output.txt",);
         }
         catch(e){
             error=String(e.stderr);
-            console.log("Error has occurered it is:");
-            //console.log(String(e.stderr));
+            //console.log("Error has occurered it is:"+error);
+            if(e.signal=="SIGTERM"){
+                verdict="TLE"
+            }
         }
         
     }
-    
-    let verdict = null;
     let recievedOriginal = ""
     if(error!==null){
-        recievedOriginal=error
-        verdict="RE"
+        recievedOriginal=error;
     }
     
     else{
