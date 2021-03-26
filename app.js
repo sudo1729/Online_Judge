@@ -8,6 +8,9 @@ const { log } = require("console");
 const cp = require("child_process");
 const fs = require("fs");
 const stripFinalNewline = require('strip-final-newline');
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+
 
 //App
 const app=express();
@@ -18,12 +21,48 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
 
+mongoose.connect("mongodb://localhost/codeDB", {useNewUrlParser: true, useUnifiedTopology: true});
+
+mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+var urlSchema = new Schema({
+    baseUrl:String,
+    input: String,
+    expected: String,
+    recieved: String,
+    code: String,
+    verdict: String,
+});
+
+const url = mongoose.model("url",urlSchema);
+
 
 //GET Request
+
 
 app.get("/",function(req,res){
     res.render("home",{input:null,code:null,recieved:null,verdict:null,expected:null});
 });
+
+url.find({},(err,data)=>{
+    if(err)
+        console.log(err);
+    else{
+        for(var i = 0;i<data.length;i++){
+            var path = "/"+data[i].baseUrl;
+            var details = {
+                input: data[i].input,
+                expected: data[i].expected,
+                recieved: data[i].recieved,
+                code: data[i].code,
+                verdict: data[i].verdict
+            }
+            app.get(path,function(req,res){
+                res.render("home",details);
+            });
+        }
+    }
+})
 
 
 //POST Request here
@@ -35,7 +74,7 @@ function runCommand(){
     var cmd = null;
     if(language=="Python"){
         //cmd = "python code.py<input.txt>recieved.txt";
-        cmd = "python "+__dirname+"/code/python/code.py"+"<"+__dirname+"/io/input.txt"+">"+__dirname+"/io/recieved.txt";
+        cmd = "python3 "+__dirname+"/code/python/code.py"+"<"+__dirname+"/io/input.txt"+">"+__dirname+"/io/recieved.txt";
         try{
             cp.execSync(cmd,{timeout:5000});
         }
@@ -142,10 +181,31 @@ app.post("/",function(req,res){
         getEvaluation();
     else
         verdict = "RE";
+
+    var randomValue = String(Math.floor((Math.random() * 100) + 1))+String(Math.floor((Math.random() * 100) + 1));
+    var url_instance = {
+        baseUrl:randomValue,
+        input:input,
+        expected:expected,
+        recieved:recieved,
+        code:code,
+        verdict:verdict
+    };
+    console.log(url_instance);
+    url.create(url_instance,function(err){
+        if(err)
+            console.log(err);
+        else
+            console.log("Successful insertion");
+    })
     
     res.render("home",{input:input,code:code,recieved:recieved,expected:expected,verdict:verdict});
       
-})
+});
+
+//Get Url request
+
+
 
 
 app.listen(3000,function(){
