@@ -191,12 +191,15 @@ app.post("/",function(req,res){
         code:code,
         verdict:verdict
     };
-    console.log(url_instance);
+    //console.log(url_instance);
     url.create(url_instance,function(err){
         if(err)
             console.log(err);
-        else
+        else{
             console.log("Successful insertion");
+            console.log("Generated url is :"+randomValue);
+        }
+            
     })
     
     res.render("home",{input:input,code:code,recieved:recieved,expected:expected,verdict:verdict});
@@ -205,7 +208,25 @@ app.post("/",function(req,res){
 
 //Get Url request
 
-
+url.find({},(err,data)=>{
+    if(err)
+        console.log(err);
+    else{
+        for(var i = 0;i<data.length;i++){
+            var path = "/"+data[i].baseUrl;
+            var details = {
+                input: data[i].input,
+                expected: data[i].expected,
+                recieved: data[i].recieved,
+                code: data[i].code,
+                verdict: data[i].verdict
+            }
+            app.get(path,function(req,res){
+                res.render("home",details);
+            });
+        }
+    }
+});
 
 
 app.listen(3000,function(){
