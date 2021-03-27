@@ -9,8 +9,8 @@ const cp = require("child_process");
 const fs = require("fs");
 const stripFinalNewline = require('strip-final-newline');
 const mongoose = require("mongoose");
+var url = require('url');
 const Schema = mongoose.Schema;
-
 
 //App
 const app=express();
@@ -19,6 +19,7 @@ const app=express();
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
+
 
 
 mongoose.connect("mongodb://localhost/codeDB", {useNewUrlParser: true, useUnifiedTopology: true});
@@ -34,40 +35,40 @@ var urlSchema = new Schema({
     verdict: String,
 });
 
-const url = mongoose.model("url",urlSchema);
+const userCode = mongoose.model("userCode",urlSchema);
 
 
-//GET Request
-
+// //GET Request
 
 app.get("/",function(req,res){
     res.render("home",{input:null,code:null,recieved:null,verdict:null,expected:null});
 });
 
-url.find({},(err,data)=>{
-    if(err)
-        console.log(err);
-    else{
-        for(var i = 0;i<data.length;i++){
-            var path = "/"+data[i].baseUrl;
-            var details = {
-                input: data[i].input,
-                expected: data[i].expected,
-                recieved: data[i].recieved,
-                code: data[i].code,
-                verdict: data[i].verdict
-            }
-            app.get(path,function(req,res){
-                res.render("home",details);
-            });
+app.get("/:version",function(req,res){
+    console.log(req.params.version);
+    userCode.find({baseUrl:req.params.version},function(err,data){
+        console.log(data);
+        if(err){
+            console.log("Error Occured");
         }
-    }
-})
+        else if(data.length===0){
+            console.log("url not found");
+        }
+        else{
+            res.render("home",data[0]);
+        }   
+    }); 
+});
 
 
-//POST Request here
+// //POST Request here
 
 var recieved = null, expected = null, input = null, verdict = null, code = null, language = null, error = null;
+
+// app.param('version',function(req,res,next,version){
+//     if(version!=="0")
+//         next();
+// })
 
 
 function runCommand(){
@@ -192,7 +193,7 @@ app.post("/",function(req,res){
         verdict:verdict
     };
     //console.log(url_instance);
-    url.create(url_instance,function(err){
+    userCode.create(url_instance).then(function(err){
         if(err)
             console.log(err);
         else{
@@ -200,33 +201,12 @@ app.post("/",function(req,res){
             console.log("Generated url is :"+randomValue);
         }
             
-    })
+    });
     
     res.render("home",{input:input,code:code,recieved:recieved,expected:expected,verdict:verdict});
       
 });
 
-//Get Url request
-
-url.find({},(err,data)=>{
-    if(err)
-        console.log(err);
-    else{
-        for(var i = 0;i<data.length;i++){
-            var path = "/"+data[i].baseUrl;
-            var details = {
-                input: data[i].input,
-                expected: data[i].expected,
-                recieved: data[i].recieved,
-                code: data[i].code,
-                verdict: data[i].verdict
-            }
-            app.get(path,function(req,res){
-                res.render("home",details);
-            });
-        }
-    }
-});
 
 
 app.listen(3000,function(){
