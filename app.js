@@ -18,7 +18,7 @@ const app=express();
 //Setting App
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(express.static("public"));
+app.use(express.static(__dirname+"/public/"));
 
 
 
@@ -40,28 +40,28 @@ const userCode = mongoose.model("userCode",urlSchema);
 
 // //GET Request
 
-app.get("/",function(req,res){
+app.get("/home",function(req,res){
     res.render("home",{input:null,code:null,recieved:null,verdict:null,expected:null});
 });
 
-app.get("/:version",function(req,res){
-    //console.log(req.params.version);
-    //var curData = {input:null,code:null,recieved:null,verdict:null,expected:null};
-    userCode.find({baseUrl:req.params.version},function(err,data){
+app.get("/home/:version",function(req,res){
+    //console.log(req.params);
+    var requestedUrl = req.params.version;
+    userCode.find({baseUrl:req.params.version}).exec(function(err,data){
         //console.log(data);
         if(err){
             console.log("Error Occured");
         }
         if(data.length===0){
-                console.log("url not found");
-                res.render("home",{input:null,code:null,recieved:null,verdict:null,expected:null});
+            console.log("Requested url "+requestedUrl+" not found! redirecting to home page !");
+            res.render("home",{input:null,code:null,recieved:null,verdict:null,expected:null});
         }
         else{
-            console.log("url found");
-            res.render("home",data[0]); 
-        }   
+            console.log("Requested url "+ requestedUrl +" found! rendering requested page !");
+            res.render("home",data[0])
+        }
     });
-    
+     
 });
 
 
