@@ -202,11 +202,12 @@ app.post("/",function(req,res){
             console.log(err);
         else{
             console.log("Successful insertion");
-            console.log("Generated url is :"+randomValue);
+            console.log("Generated url is : "+randomValue);
         }
             
     });
-    res.render("home",{input:input,code:code,recieved:recieved,expected:expected,verdict:verdict});
+    res.redirect('/home/'+randomValue);
+    //res.render("home",{input:input,code:code,recieved:recieved,expected:expected,verdict:verdict});
       
 });
 
