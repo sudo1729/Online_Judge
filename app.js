@@ -45,19 +45,23 @@ app.get("/",function(req,res){
 });
 
 app.get("/:version",function(req,res){
-    console.log(req.params.version);
+    //console.log(req.params.version);
+    //var curData = {input:null,code:null,recieved:null,verdict:null,expected:null};
     userCode.find({baseUrl:req.params.version},function(err,data){
-        console.log(data);
+        //console.log(data);
         if(err){
             console.log("Error Occured");
         }
-        else if(data.length===0){
-            console.log("url not found");
+        if(data.length===0){
+                console.log("url not found");
+                res.render("home",{input:null,code:null,recieved:null,verdict:null,expected:null});
         }
         else{
-            res.render("home",data[0]);
+            console.log("url found");
+            res.render("home",data[0]); 
         }   
-    }); 
+    });
+    
 });
 
 
@@ -193,7 +197,7 @@ app.post("/",function(req,res){
         verdict:verdict
     };
     //console.log(url_instance);
-    userCode.create(url_instance).then(function(err){
+    userCode.create(url_instance,function(err){
         if(err)
             console.log(err);
         else{
@@ -202,7 +206,6 @@ app.post("/",function(req,res){
         }
             
     });
-    
     res.render("home",{input:input,code:code,recieved:recieved,expected:expected,verdict:verdict});
       
 });
