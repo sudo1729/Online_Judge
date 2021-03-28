@@ -36,7 +36,7 @@
 
 
 
-    <form action="/home" method="POST">
+    <form action="/home/<%=baseUrl%>" method="POST">
       <div class="container-fluid">
         <div class="row g-2">
           <div class="col-lg-8">
@@ -45,7 +45,7 @@
                       <span>Language</span>
                   </div>
                   <div class="col-lg-10 ml-auto language-text">
-                      <input type="hidden" name="language" style="display: none;">
+                      <input type="hidden" name="language" style="display: none;" value="<%=language%>">
                       <label class="radio-inline"><input type="button" value="C++" id="cpp" class="btn btn-primary"></label>
                       <label class="radio-inline"><input type="button" value="Python" id="python" class="btn btn-primary"></label>
                   </div>

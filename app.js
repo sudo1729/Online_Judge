@@ -33,6 +33,7 @@ var urlSchema = new Schema({
     recieved: String,
     code: String,
     verdict: String,
+    language:String
 });
 
 const userCode = mongoose.model("userCode",urlSchema);
@@ -41,7 +42,7 @@ const userCode = mongoose.model("userCode",urlSchema);
 // //GET Request
 
 app.get("/home",function(req,res){
-    res.render("home",{input:null,code:null,recieved:null,verdict:null,expected:null});
+    res.render("home",{input:null,code:null,recieved:null,verdict:null,expected:null,language:null});
 });
 
 app.get("/home/:version",function(req,res){
@@ -54,11 +55,12 @@ app.get("/home/:version",function(req,res){
         }
         if(data.length===0){
             console.log("Requested url "+requestedUrl+" not found! redirecting to home page !");
-            res.render("home",{input:null,code:null,recieved:null,verdict:null,expected:null});
+            // res.render("home",{input:null,code:null,recieved:null,verdict:null,expected:null});
+            res.redirect("/home");
         }
         else{
             console.log("Requested url "+ requestedUrl +" found! rendering requested page !");
-            res.render("home",data[0])
+            res.render("newPage",data[0])
         }
     });
      
@@ -167,7 +169,7 @@ function getEvaluation(){
 
 
 
-app.post("/",function(req,res){
+app.post("/home",function(req,res){
     language = req.body.language;
     //input
     getInput(req.body.input);
@@ -194,10 +196,11 @@ app.post("/",function(req,res){
         expected:expected,
         recieved:recieved,
         code:code,
-        verdict:verdict
+        verdict:verdict,
+        language:language
     };
     //console.log(url_instance);
-    userCode.create(url_instance,function(err){
+    userCode.create(url_instance).then(function(err){
         if(err)
             console.log(err);
         else{
@@ -210,6 +213,47 @@ app.post("/",function(req,res){
     //res.render("home",{input:input,code:code,recieved:recieved,expected:expected,verdict:verdict});
       
 });
+
+app.post("/home/:version",function(req,res){
+    language = req.body.language;
+    //input
+    getInput(req.body.input);
+
+    //Expected
+    getExpected(req.body.expected);
+
+    //Code
+    getCode(req.body.code);
+
+    //Run
+    runCommand();
+
+    //Eval
+    if(error === null)
+        getEvaluation();
+    else
+        verdict = "RE";
+
+    
+    //console.log(url_instance);
+    userCode.updateOne({baseUrl:req.params.version},{
+        baseUrl:req.params.version,
+        input:input,
+        expected:expected,
+        recieved:recieved,
+        code:code,
+        verdict:verdict,
+        language:req.body.language
+    },function(err){
+        if(err)
+            console.log("error updating database");
+        else{
+            console.log("successfull updation");
+        }
+            
+    });
+    res.redirect('/home/'+req.params.version);
+})
 
 
 
