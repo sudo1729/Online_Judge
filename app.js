@@ -22,7 +22,7 @@ app.use(express.static(__dirname+"/public/"));
 
 
 
-mongoose.connect("mongodb://localhost/codeDB", {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect("mongodb+srv://sudo1729:Tripathi@21@cluster0.yztai.mongodb.net/codeDB?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true});
 
 mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
