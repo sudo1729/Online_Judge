@@ -207,9 +207,9 @@ app.post("/home",function(req,res){
             console.log("Successful insertion");
             console.log("Generated url is : "+randomValue);
         }
-            
+        res.redirect('/home/'+randomValue);   
     });
-    res.redirect('/home/'+randomValue);
+    
     //res.render("home",{input:input,code:code,recieved:recieved,expected:expected,verdict:verdict});
       
 });
