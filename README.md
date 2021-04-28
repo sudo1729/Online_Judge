@@ -26,3 +26,7 @@ Basic Node web app to achieve functionality of online judges.
 
 
 ![final](https://user-images.githubusercontent.com/28992930/111881533-cd947f80-89d6-11eb-992f-0b7ef9c609e1.gif)
+
+
+## Special thanks to team ACE code for Providing an awesome code editor.
+### link to project ace -> https://github.com/ajaxorg/ace 
